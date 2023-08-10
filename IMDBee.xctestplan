@@ -1,0 +1,45 @@
+{
+  "configurations" : [
+    {
+      "id" : "8F404C07-8438-4C78-AF0D-768D74EEEF8D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:IMDBee.xcodeproj",
+      "identifier" : "19EBCEDA2A5FFF2C00C4976D",
+      "name" : "IMDBee"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:IMDBee.xcodeproj",
+        "identifier" : "19EBCEF02A5FFF2E00C4976D",
+        "name" : "IMDBeeTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:IMDBee.xcodeproj",
+        "identifier" : "19EBCEFA2A5FFF2E00C4976D",
+        "name" : "IMDBeeUITests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:IMDBee.xcodeproj",
+        "identifier" : "19EBCF402A60078F00C4976D",
+        "name" : "DataModulesTests"
+      }
+    }
+  ],
+  "version" : 1
+}
