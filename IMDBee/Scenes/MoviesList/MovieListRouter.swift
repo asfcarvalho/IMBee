@@ -20,7 +20,7 @@ class MovieListRouter{
     }
         
     class func build() -> UIViewController {
-        var movieDataSource = MovieListDataSource()
+        let movieDataSource = MovieListDataSource()
         let viewModel = MovieListViewModel(movieListValidator: MovieListViewModelValidator(),
                                            movieDataSource: movieDataSource)
         let rootView = MovieListView(input: viewModel)
@@ -32,8 +32,11 @@ class MovieListRouter{
     
     func perform(action: Router.MovieListRouter.ViewOutput.Acion) {
         switch action {
-        case .showDetail(let movie):
-            let vc = MovideDetailRouter.build(movie)
+        case .showDetail(let movie, let isLightMode):
+            let from = self.viewController as? MovieDetailProtocol
+            let vc = MovideDetailRouter.build(movie, isLightMode, delegate: from)
+            vc.modalPresentationStyle = .overFullScreen
+            vc.view.backgroundColor = .clear
             viewController?.present(vc, animated: true)
         case .dismiss:
             viewController?.dismiss(animated: true)
@@ -45,7 +48,7 @@ public extension Router {
     enum MovieListRouter {
         public enum ViewOutput {
             public enum Acion: Hashable {
-                case showDetail(_ movie: Movie?)
+                case showDetail(_ movie: Movie?, _ isLightMode: Bool)
                 case dismiss
             }
         }

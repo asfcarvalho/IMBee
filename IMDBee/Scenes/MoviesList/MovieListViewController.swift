@@ -49,3 +49,9 @@ class MovieListViewController<T: MovieListViewModelProtocol>: UIHostingControlle
         }.store(in: token)
     }
 }
+
+extension MovieListViewController: MovieDetailProtocol {
+    func darkModeAction(_ status: Bool) {
+        viewModel?.send(action: .darkModeDetailChanged(status))
+    }
+}

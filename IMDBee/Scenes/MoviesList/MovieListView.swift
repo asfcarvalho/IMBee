@@ -23,9 +23,12 @@ struct MovieListView<T: MovieListViewModelProtocol>: View {
     
     @State var searchText: String = ""
     @State var searchbarY: CGFloat = 0
+    @State var scrollOffset: CGFloat = CGFloat.zero
+    @Namespace var scrollSpace
     
     init(input: T) {
         self.input = input
+        UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
@@ -40,7 +43,7 @@ struct MovieListView<T: MovieListViewModelProtocol>: View {
                         Text("Empty")
                             .accessibilityIdentifier(ValueDefault.movieListEmpty)
                     } else {
-                        ScrollView {
+                        ScrollView(.vertical, showsIndicators: false) {
                             VStack(spacing: 40) {
                                 if let movieTheaterList = input.movieTheaterList {
                                     moviesInTheater(movieTheaterList)
@@ -48,10 +51,12 @@ struct MovieListView<T: MovieListViewModelProtocol>: View {
                                 if let movieList = input.movieList {
                                     topMovieListView(movieList)
                                 }
-                            }
-                            .padding(.top, 100)
-                        }.accessibilityIdentifier(ValueDefault.movieListView)
-                            .simultaneousGesture(drag)
+                            }.padding(.top, 100)
+                                .background(
+                                    drag
+                                )
+                        }.coordinateSpace(name: scrollSpace)
+                            .accessibilityIdentifier(ValueDefault.movieListView)
                     }
                 }
                 searchBar
@@ -59,7 +64,6 @@ struct MovieListView<T: MovieListViewModelProtocol>: View {
                     .animation(.linear(duration: 0.2), value: searchbarY)
                 
             }.frame(maxHeight: UIScreen.screenHeight)
-                
             .navigationBarHidden(true)
             .onTapGesture {
                 hideKeyboard()
@@ -68,17 +72,20 @@ struct MovieListView<T: MovieListViewModelProtocol>: View {
             
     }
     
-    var drag: some Gesture {
-        DragGesture()
-            .onChanged { state in
-                let _ = print("---->", state.translation.height, state.translation.width)
-                if state.translation.height > 0 && state.translation.width > -10 &&
-                    state.translation.width < 10 {
-                    searchbarY = 0
-                } else if state.translation.height < 0 && state.translation.width < 10 && state.translation.width > -10 {
-                    searchbarY = -150
-                }
+    var drag: some View {
+        GeometryReader { proxy -> Color in
+            let min = proxy.frame(in: .named(scrollSpace)).minY
+            if min < scrollOffset && min < 0 {
+                searchbarY = -150
             }
+            if min > scrollOffset {
+                searchbarY = 0
+            }
+            
+            scrollOffset = min
+            
+            return Color.clear
+        }
     }
     
     private var searchingView: some View {

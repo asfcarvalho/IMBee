@@ -44,7 +44,7 @@ class MovieListViewModel: MovieListViewModelProtocol {
             getThemeColorMode()
         case .showDetail(let movieId):
             let movie = self.movieList?.first(where: { $0.id == movieId })
-            router?.perform(action: .showDetail(movie))
+            router?.perform(action: .showDetail(movie, isLightMode))
         case .darkModeChanged(let status):
             if status {
                 LocalDataAdapter.shared.setValue(value: ValueDefault.light, key: .themeColorKey)
@@ -57,6 +57,9 @@ class MovieListViewModel: MovieListViewModelProtocol {
         case .isSearching(let text):
             isSearching = movieListValidator?.isSearching(text) ?? false
             self.movieListFiltered = filteringMovieList(text)
+            
+        case .darkModeDetailChanged(let status):
+            self.isLightMode = status
         }
     }
     
@@ -117,6 +120,7 @@ public extension ViewModel {
                 case viewDidLoad
                 case showDetail(_ movieId: String)
                 case darkModeChanged(_ status: Bool)
+                case darkModeDetailChanged(_ status: Bool)
                 case isSearching(_ text: String)
             }
         }

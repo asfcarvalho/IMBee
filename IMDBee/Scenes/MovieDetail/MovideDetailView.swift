@@ -13,11 +13,15 @@ import Common
 import BaseUI
 import Components
 import DataModules
+import AVKit
 
 struct MovideDetailView: View {
     
     @ObservedObject var input: MovideDetailViewModel
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     public var output = MyObservableObject<ViewModel.MovideDetail.ViewOutput.Action>()
+    
+    @State var player = AVPlayer(url:  Bundle.main.url(forResource: "video", withExtension: "mp4")!)
     
     private var token = CancelBag()
     
@@ -26,26 +30,82 @@ struct MovideDetailView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack {
-                navigationBar
-                if input.isLoading {
-                    ProgressView()
-                } else {
+        ZStack(alignment: .center) {
+            ZStack {
+                VStack {
                     if let movie = input.movie {
                         VStack {
-                            imageLoadView(movie.urlImage)
-                            VStack(alignment: .leading, spacing: 16) {
+                            HStack {
+                                Button {
+                                    player.pause()
+                                    output.value.send(.dismiss)
+                                } label: {
+                                    ImageName.iconBack.imageTemplate
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 34, height: 24)
+                                        .foregroundColor(ColorName.secondaryText.color)
+                                }
+                                
+                                Spacer()
+                                toggleView()
+                            }.padding(4)
+                            HStack {
                                 Text(movie.title)
-                                Text(movie.description)
+                                    .font(MyFont.systemMedium32.font)
+                                    .foregroundColor(ColorName.secondaryText.color)
+                                    .lineLimit(1)
+                                    .frame(alignment: .leading)
+                                Spacer()
+                                Text(movie.rating)
+                                    .font(MyFont.systemMedium22.font)
+                                    .foregroundColor(ColorName.secondaryText.color)
+                                ImageName.iconRating.image
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                            }.padding(4)
+                            
+                            VStack(alignment: .leading, spacing: 16) {
                                 Text(movie.year)
+                                    .font(MyFont.systenMedium14.font)
+                                    .foregroundColor(ColorName.secondaryText.color)
+                                ZStack {
+                                    VideoPlayer(player: player)
+                                        .frame(height: 198)
+                                        .overlay(alignment: .bottomLeading) {
+                                            if !input.isPlaying {
+                                                Button {
+                                                    player.play()
+                                                    input.isPlaying = true
+                                                } label: {
+                                                    HStack {
+                                                        ImageName.iconPlayer.imageTemplate
+                                                            .resizable()
+                                                            .frame(width: 66, height: 66)
+                                                            .foregroundColor(Color.white)
+                                                        Text("Play trailer")
+                                                            .font(MyFont.systenMedium14.font)
+                                                            .foregroundColor(Color.white)
+                                                    }.padding()
+                                                }
+                                            }
+                                        }
+                                }
+                                Text(movie.description)
+                                    .font(MyFont.systenMedium14.font)
+                                    .foregroundColor(ColorName.secondaryText.color)
                             }.frame(maxWidth: .infinity, alignment: .leading)
-                                .padding()
-                        }
-                        Spacer()
+                                .padding(4)
+                        }.padding()
+                        //                    Spacer()
                     }
-                }
-            }.navigationBarHidden(true)
+                }.background(ColorName.backgroundSecondy.color)
+                    .cornerRadius(15)
+                    .padding()                    
+                    .frame(maxWidth:  UIScreen.screenWidth, maxHeight: 600)
+                    
+                    
+            }.frame(width:  UIScreen.screenWidth, height: UIScreen.screenHeight)
         }.alert(isPresented: $input.displayAlert) {
             Alert(title: Text("Movie not found!"),
                   dismissButton: Alert.Button.default(Text("OK"),
@@ -53,6 +113,21 @@ struct MovideDetailView: View {
                 output.value.send(.dismiss)
             }))
         }.accessibilityIdentifier(ValueDefault.movideDetailView)
+            .background(ColorName.backgroundTransparent.color.opacity(0.5))
+    }
+    
+    private func toggleView() -> some View {
+        let toggle = MyTuggle(input: .init(isEnabled: input.isLightMode,
+                                           size: CGSize(width: 55, height: 30)))
+        
+        toggle.output.value.sink { action in
+            switch action {
+            case .toggleTapped(let status):
+                output.value.send(.darkModeChanged(status))
+            }
+        }.store(in: token)
+        
+        return toggle
     }
     
     private var navigationBar: some View {

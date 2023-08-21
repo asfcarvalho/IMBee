@@ -16,6 +16,8 @@ public enum ImageName: String, CaseIterable, Codable {
     case iconToggleDark = "iconToggleDark"
     case iconSearch = "magnifyingglass"
     case iconClose = "xmark.circle"
+    case iconBack = "iconArrow"
+    case iconPlayer = "play.circle"
     
     public var name: String {
         self.rawValue

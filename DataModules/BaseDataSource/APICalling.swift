@@ -64,7 +64,6 @@ public class APICalling {
         
         urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
-//                callBack(.failure(.Error(description: error.localizedDescription)))
                 callBack(.failure(.ErrorError))
                 return
             }

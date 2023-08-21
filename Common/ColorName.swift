@@ -18,7 +18,10 @@ public extension UIColor {
         case blue03
         case primary
         case primaryText
+        case secondaryText
         case background
+        case backgroundTransparent
+        case backgroundSecondy
         case titleRectangle
         case shadow
         case dividerPrimary
@@ -74,6 +77,10 @@ public extension UIColor {
                 UIColor.ColorPalleteBee.black.uiColor :
                 UIColor.ColorPalleteBee.neutral100.uiColor
                 
+            case .secondaryText: result = on == .light ?
+                UIColor.ColorPalleteBee.black.uiColor :
+                UIColor.ColorPalleteBee.primary200.uiColor
+                
             case .background: result = on == .light ?
                 UIColor.ColorPalleteBee.white.uiColor :
                 UIColor.ColorPalleteBee.black.uiColor
@@ -89,6 +96,14 @@ public extension UIColor {
             case .dividerPrimary: result = on == .light ?
                 UIColor.ColorPalleteBee.neutral800.uiColor :
                 UIColor.ColorPalleteBee.neutral100.uiColor
+                
+            case .backgroundTransparent: result = on == .light ?
+                UIColor.ColorPalleteBee.primary1000.uiColor :
+                UIColor.ColorPalleteBee.primary1000.uiColor
+                
+            case .backgroundSecondy: result = on == .light ?
+                UIColor.ColorPalleteBee.blue03.uiColor.withAlphaComponent(0.95) :
+                UIColor.ColorPalleteBee.neutral1000.uiColor.withAlphaComponent(0.95)
             }
             
             if let result = result {

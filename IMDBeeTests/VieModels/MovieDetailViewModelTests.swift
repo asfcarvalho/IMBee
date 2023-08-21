@@ -29,7 +29,7 @@ final class MovieDetailViewModelTests: XCTestCase {
     func testMovieDetailViewModel_WhenViewModel_GetThumbNail380SizeEmpty() {
         // Arrange
         let validator = MovieDetailViewModelValidator()
-        let sut = MovideDetailViewModel(movieEmpty.asMovie(), validator)
+        let sut = MovideDetailViewModel(movieEmpty.asMovie(), validator: validator)
         
         // Act
         let urlImage = sut.movie?.urlImage
@@ -52,7 +52,7 @@ final class MovieDetailViewModelTests: XCTestCase {
     func testMovieDetailViewModel_WhenViewModel_ShuldDisplayView() {
         // Arrange
         let validator = MovieDetailViewModelValidator()
-        let sut = MovideDetailViewModel(movie.asMovie(), validator)
+        let sut = MovideDetailViewModel(movie.asMovie(), validator: validator)
         
         // Act
         sut.send(action: .viewDidLoad)

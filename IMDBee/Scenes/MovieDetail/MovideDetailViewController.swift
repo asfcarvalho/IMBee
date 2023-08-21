@@ -41,6 +41,8 @@ class MovideDetailViewController: UIHostingController<MovideDetailView> {
                 self.viewModel?.send(action: .dismiss)
             case .sample:
                 break
+            case .darkModeChanged(let status):
+                self.viewModel?.send(action: .darkModeChanged(status))
             }
         }.store(in: token)
     }

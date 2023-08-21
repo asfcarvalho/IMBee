@@ -16,6 +16,7 @@ public enum MyFont {
     case systemMedium20
     case systemMedium22
     case systemMedium24
+    case systemMedium32
     case systemSemiBold22
     case systemBold16
     case systemBold20
@@ -37,6 +38,8 @@ public enum MyFont {
             return Font.system(size: 22, weight: .medium)
         case .systemMedium24:
             return Font.system(size: 24, weight: .medium)
+        case .systemMedium32:
+            return Font.system(size: 32, weight: .medium)
         case .systemSemiBold22:
             return Font.system(size: 22, weight: .semibold)
         case .systemBold16:
