@@ -57,6 +57,8 @@ class MockMovieListViewModel: MovieListViewModelProtocol {
         case .isSearching(let text):
             isSearching = !text.isEmpty
             self.movieListFiltered = self.movieList?.filter({ $0.title.localizedCaseInsensitiveContains(text) })
+        case .darkModeDetailChanged(let status):
+            isLightMode = status
         }
     }
 }

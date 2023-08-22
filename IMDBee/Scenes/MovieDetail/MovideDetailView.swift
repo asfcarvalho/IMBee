@@ -35,69 +35,12 @@ struct MovideDetailView: View {
                 VStack {
                     if let movie = input.movie {
                         VStack {
-                            HStack {
-                                Button {
-                                    player.pause()
-                                    output.value.send(.dismiss)
-                                } label: {
-                                    ImageName.iconBack.imageTemplate
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 34, height: 24)
-                                        .foregroundColor(ColorName.secondaryText.color)
-                                }
-                                
-                                Spacer()
-                                toggleView()
-                            }.padding(4)
-                            HStack {
-                                Text(movie.title)
-                                    .font(MyFont.systemMedium32.font)
-                                    .foregroundColor(ColorName.secondaryText.color)
-                                    .lineLimit(1)
-                                    .frame(alignment: .leading)
-                                Spacer()
-                                Text(movie.rating)
-                                    .font(MyFont.systemMedium22.font)
-                                    .foregroundColor(ColorName.secondaryText.color)
-                                ImageName.iconRating.image
-                                    .resizable()
-                                    .frame(width: 25, height: 25)
-                            }.padding(4)
+                            headerView
                             
-                            VStack(alignment: .leading, spacing: 16) {
-                                Text(movie.year)
-                                    .font(MyFont.systenMedium14.font)
-                                    .foregroundColor(ColorName.secondaryText.color)
-                                ZStack {
-                                    VideoPlayer(player: player)
-                                        .frame(height: 198)
-                                        .overlay(alignment: .bottomLeading) {
-                                            if !input.isPlaying {
-                                                Button {
-                                                    player.play()
-                                                    input.isPlaying = true
-                                                } label: {
-                                                    HStack {
-                                                        ImageName.iconPlayer.imageTemplate
-                                                            .resizable()
-                                                            .frame(width: 66, height: 66)
-                                                            .foregroundColor(Color.white)
-                                                        Text("Play trailer")
-                                                            .font(MyFont.systenMedium14.font)
-                                                            .foregroundColor(Color.white)
-                                                    }.padding()
-                                                }
-                                            }
-                                        }
-                                }
-                                Text(movie.description)
-                                    .font(MyFont.systenMedium14.font)
-                                    .foregroundColor(ColorName.secondaryText.color)
-                            }.frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(4)
+                            titleView(movie)
+                            
+                            bodyView(movie)
                         }.padding()
-                        //                    Spacer()
                     }
                 }.background(ColorName.backgroundSecondy.color)
                     .cornerRadius(15)
@@ -114,6 +57,82 @@ struct MovideDetailView: View {
             }))
         }.accessibilityIdentifier(ValueDefault.movideDetailView)
             .background(ColorName.backgroundTransparent.color.opacity(0.5))
+    }
+    
+    private var headerView: some View {
+        HStack {
+            Button {
+                player.pause()
+                output.value.send(.dismiss)
+            } label: {
+                ImageName.iconBack.imageTemplate
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 34, height: 24)
+                    .foregroundColor(ColorName.secondaryText.color)
+            }
+            
+            Spacer()
+            toggleView()
+                .accessibilityIdentifier(input.isLightMode ? ValueDefault.themeLightMode : ValueDefault.themeDarkMode)
+        }.padding(4)
+    }
+    
+    private func titleView(_ movie: Movie) -> some View {
+        HStack {
+            Text(movie.title)
+                .font(MyFont.systemMedium32.font)
+                .foregroundColor(ColorName.secondaryText.color)
+                .lineLimit(1)
+                .frame(alignment: .leading)
+            Spacer()
+            Text(movie.rating)
+                .font(MyFont.systemMedium22.font)
+                .foregroundColor(ColorName.secondaryText.color)
+            ImageName.iconRating.image
+                .resizable()
+                .frame(width: 25, height: 25)
+        }.padding(4)
+    }
+    
+    private var playerView: some View {
+        ZStack {
+            VideoPlayer(player: player)
+                .frame(height: 198)
+                .overlay(alignment: .bottomLeading) {
+                    if !input.isPlaying {
+                        Button {
+                            player.play()
+                            input.isPlaying = true
+                        } label: {
+                            HStack {
+                                ImageName.iconPlayer.imageTemplate
+                                    .resizable()
+                                    .frame(width: 66, height: 66)
+                                    .foregroundColor(Color.white)
+                                Text("Play trailer")
+                                    .font(MyFont.systenMedium14.font)
+                                    .foregroundColor(Color.white)
+                            }.padding()
+                        }
+                    }
+                }
+        }
+    }
+    
+    private func bodyView(_ movie: Movie) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(movie.year)
+                .font(MyFont.systenMedium14.font)
+                .foregroundColor(ColorName.secondaryText.color)
+            
+            playerView
+            
+            Text(movie.description)
+                .font(MyFont.systenMedium14.font)
+                .foregroundColor(ColorName.secondaryText.color)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(4)
     }
     
     private func toggleView() -> some View {

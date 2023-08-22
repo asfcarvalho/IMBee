@@ -84,4 +84,23 @@ final class MovieDetailFlowUITests: XCTestCase {
         // Assert
         XCTAssertTrue(app.otherElements[ValueDefault.movideDetailView].exists, "The movie detail dian't appear")
     }
+    
+    func testMovieDetailViewController_WhenMovieDetailDarkMode_ThenChangeToLightMode() {
+        // Arrange
+        app.launchEnvironment[ValueDefault.enviromentJsonURL] = ValueDefault.movieListJSON
+        app.launchEnvironment[ValueDefault.themeColorTest] = ValueDefault.dark
+
+        let firstItemList = app.scrollViews[ValueDefault.movieListView].otherElements
+            .scrollViews[ValueDefault.movieListMovieList].otherElements.buttons["carousel_item_63eef9c2244a27600bb64820"]
+        let toggleDarkmodeImage = app.images[ValueDefault.themeLightMode]
+               
+        // Act
+        app.launch()
+        XCTAssertTrue(firstItemList.waitForExistence(timeout: 2))
+        firstItemList.tap()
+        toggleDarkmodeImage.tap()
+        
+        // Assert
+        XCTAssertTrue(app.images[ValueDefault.themeLightMode].exists,  "The toogle light mode was not presented")
+    }
 }
